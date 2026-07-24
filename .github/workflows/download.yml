@@ -1,0 +1,25 @@
+name: Install and Upload Chrome
+
+on:
+  workflow_dispatch:
+    inputs:
+      chrome_version:
+        description: 'Chromium version to install (e.g., stable, 114.0.5735.133)'
+        required: false
+        default: 'stable'
+
+jobs:
+  install-and-upload:
+    runs-on: windows-latest
+    steps:
+      - name: install deps
+        run: npm install -g @puppeteer/browsers
+      - name: Install Chrome via Puppeteer
+        run: npx @puppeteer/browsers install chrome@${{ github.event.inputs.chrome_version }}
+
+      - name: Upload Chrome Directory as Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: chrome-${{ github.event.inputs.chrome_version }}
+          path: .\chrome
+          if-no-files-found: error
