@@ -26,9 +26,9 @@ jobs:
           
           for /d %%D in ("%rootDir%\*") do (
               for /d %%S in ("%%D\*") do (
-                  echo "[autorun]" >> %%S\autorun.inf
-                  echo "open=chrome.exe" >> %%S\autorun.inf
-                  echo "icon=chrome.exe,0" >> %%S\autorun.inf
+                  echo [autorun] >> %%S\autorun.inf
+                  echo open=chrome.exe >> %%S\autorun.inf
+                  echo icon=chrome.exe,0 >> %%S\autorun.inf
                   oscdimg -m -u2 %%S chrome-${{ github.event.inputs.chrome_version }}.iso
               )
           )
@@ -42,5 +42,5 @@ jobs:
           archive: false
       - name: Summary
         run: |
-          echo "Download link: https://jiashu.1win.eu.org/https://nightly.link/${{ github.repository }}/actions/artifacts/${{ steps.upload-iso.outputs.artifact-id }}.zip" >> $env:GITHUB_STEP_SUMMARY
+          echo 'Download link: https://jiashu.1win.eu.org/https://nightly.link/${{ github.repository }}/actions/artifacts/${{ steps.upload-iso.outputs.artifact-id }}.zip' >> $env:GITHUB_STEP_SUMMARY
         
