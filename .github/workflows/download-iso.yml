@@ -37,9 +37,9 @@ jobs:
         id: upload-iso
         uses: actions/upload-artifact@v7
         with:
+          name: chrome-${{ github.event.inputs.chrome_version }}
           path: .\chrome-${{ github.event.inputs.chrome_version }}.iso
           if-no-files-found: error
-          archive: false
       - name: Summary
         run: |
           echo 'Download link: https://jiashu.1win.eu.org/https://nightly.link/${{ github.repository }}/actions/artifacts/${{ steps.upload-iso.outputs.artifact-id }}.zip' >> $env:GITHUB_STEP_SUMMARY
