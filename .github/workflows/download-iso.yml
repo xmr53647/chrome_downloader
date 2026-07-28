@@ -26,6 +26,9 @@ jobs:
           
           for /d %%D in ("%rootDir%\*") do (
               for /d %%S in ("%%D\*") do (
+                  echo "[autorun]" >> %%S\autorun.inf
+                  echo "open=chrome.exe" >> %%S\autorun.inf
+                  echo "icon=chrome.exe,0" >> %%S\autorun.inf
                   oscdimg -m -u2 %%S chrome-${{ github.event.inputs.chrome_version }}.iso
               )
           )
