@@ -1,4 +1,4 @@
-name: Install and Upload Chrome
+name: Install and Upload Chrome ISO
 
 on:
   workflow_dispatch:
