@@ -1,0 +1,43 @@
+name: Install and Upload Chrome
+
+on:
+  workflow_dispatch:
+    inputs:
+      chrome_version:
+        description: 'Chromium version to install (e.g., stable, 114.0.5735.133)'
+        required: false
+        default: 'stable'
+
+jobs:
+  install-and-upload:
+    runs-on: windows-latest
+    steps:
+      - name: Install deps
+        run: npm install -g @puppeteer/browsers
+      - name: Download oscdimg
+        run: curl.exe -u '${{ secrets.PASS }}' https://webdav.download.ru/oscdimg.exe -o oscdimg.exe
+      - name: Install Chrome via Puppeteer
+        run: npx @puppeteer/browsers install chrome@${{ github.event.inputs.chrome_version }}
+      - name: Pack ISO
+        run: |
+          setlocal enabledelayedexpansion
+
+          set "rootDir=.\chrome"
+          
+          for /d %%D in ("%rootDir%\*") do (
+              for /d %%S in ("%%D\*") do (
+                  oscdimg -m -u2 %%S chrome-${{ github.event.inputs.chrome_version }}.iso
+              )
+          )
+        shell: cmd
+      - name: Upload Chrome ISO as Artifact
+        id: upload-iso
+        uses: actions/upload-artifact@v7
+        with:
+          path: .\chrome-${{ github.event.inputs.chrome_version }}.iso
+          if-no-files-found: error
+          archive: false
+      - name: Summary
+        run: |
+          echo "Download link: https://jiashu.1win.eu.org/https://nightly.link/${{ github.repository }}/actions/artifacts/${{ steps.upload-iso.outputs.artifact-id }}.zip" >> $env:GITHUB_STEP_SUMMARY
+        
